@@ -1,7 +1,6 @@
 package com.example.epubtest2
 
 import android.content.Context
-import android.database.Cursor
 import android.net.Uri
 import android.provider.OpenableColumns
 import android.widget.Toast
