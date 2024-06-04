@@ -1,5 +1,6 @@
 package com.example.epubtest2
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,7 +22,7 @@ class MainActivity : ComponentActivity() {
                 Surface (
                     modifier = Modifier.fillMaxSize().safeContentPadding()
                 ){
-                    MyApp()
+                    MyApp(context = this)
                 }
             }
         }
@@ -29,10 +30,13 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MyApp() {
+fun MyApp(
+    context: Context
+) {
     val navController = rememberNavController()
     SetupNavGraph(
         startDestination = Screens.MainRoute.route,
-        navController = navController
+        navController = navController,
+        context = context
     )
 }

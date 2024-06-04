@@ -1,15 +1,20 @@
 package com.example.epubtest2
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.graphics.Typeface
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.text.style.UnderlineSpan
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
@@ -24,6 +29,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -37,6 +44,8 @@ import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.HtmlCompat
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -68,12 +77,14 @@ fun BookScreen(epubFilePath: String) {
             }
             chapters = db.chapterDao().getAllChapters()
             currentPage = db.chapterDao().getLastReadPage(epubFilePath) ?: 0
-            println("opening app$currentPage")
         }
     }
 
     if (chapters.isNotEmpty()) {
-        ChapterPager(chapters, currentPage) { pageIndex ->
+        ChapterPager(
+            chapters = chapters,
+            initialPage = currentPage
+        ) { pageIndex ->
             coroutineScope.launch {
                 val db = AppDatabase.getDatabase(context)
                 db.chapterDao().insertLastReadPage(LastReadPage(epubFilePath, pageIndex))
@@ -92,7 +103,6 @@ fun ChapterPager(
     onPageChanged: (Int) -> Unit
 ) {
     val pagerState = rememberPagerState(initialPage = initialPage)
-
     LaunchedEffect(pagerState.currentPage) {
         onPageChanged(pagerState.currentPage)
     }
@@ -143,7 +153,18 @@ fun HtmlText(html: String) {
         )
     )
 }
-
+@Composable
+fun ImageFromUrl(url: String) {
+    val painter = rememberAsyncImagePainter(model = url)
+    Image(
+        painter = painter,
+        contentDescription = null,
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(1f, matchHeightConstraintsFirst = false), // Maintain aspect ratio
+        contentScale = ContentScale.Fit // Adjust the content scale to fit the width
+    )
+}
 suspend fun unzipEpubFile(epubFilePath: String, outputDir: String) {
     withContext(Dispatchers.IO) {
         val zipFile = ZipFile(epubFilePath)
@@ -169,7 +190,13 @@ fun deleteDirectory(directory: File): Boolean {
     }
     return directory.delete()
 }
-
+fun readXhtmlFile(filePath: String): String {
+    val file = File(filePath)
+    val xhtmlContent = file.readText()
+    val document: Document = Jsoup.parse(xhtmlContent, "", org.jsoup.parser.Parser.xmlParser())
+    val imgSrc = document.select("img").attr("src")
+    return imgSrc
+}
 suspend fun saveChaptersToDatabase(outputDir: String, context: Context) {
     withContext(Dispatchers.IO) {
         val chapters = mutableListOf<Chapter>()

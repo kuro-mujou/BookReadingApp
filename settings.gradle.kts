@@ -16,9 +16,10 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-//        maven {
-//            url = uri("https://www.jitpack.io" )
-//        }
+        maven {
+            url = uri("https://www.jitpack.io" )
+            url = uri("https://github.com/psiegman/mvn-repo/raw/master/releases")
+        }
     }
 }
 

@@ -19,10 +19,9 @@ fun MainScreen(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // Replace this button with your actual "Read" button in "Book A" UI
         Button(onClick = {
-            val epubFilePath = "/storage/emulated/0/Download/test.epub" // Replace with your actual EPUB file path
-            navController.navigate(Screens.BookPage.route + "/${Uri.encode(epubFilePath)}")
+            val epubFilePath = "/storage/emulated/0/Download/test.epub"
+            navController.navigate(Screens.BookScreen.route + "/${Uri.encode(epubFilePath)}")
         }) {
             Text("Open EPUB File")
         }
