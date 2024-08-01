@@ -38,5 +38,17 @@ fun NavGraphBuilder.mainGraph(
             val filePath = backStackEntry.arguments?.getString("filePath")
             filePath?.let { BookList(navController, it) }
         }
+        composable(
+            route = Screens.WebviewScreen.route,
+        ){
+            WebViewScreen(navController)
+        }
+        composable(
+            route = Screens.BookContentScreen.route + "/{filePath}",
+            arguments = listOf(navArgument("filePath") { type = NavType.StringType })
+        ){backStackEntry ->
+            val filePath = backStackEntry.arguments?.getString("filePath")
+            filePath?.let { BookContent(navController, it) }
+        }
     }
 }

@@ -20,9 +20,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             EpubTest2Theme {
                 Surface (
-                    modifier = Modifier.fillMaxSize().safeContentPadding()
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .safeContentPadding()
                 ){
                     MyApp(context = this)
+//                    Test()
                 }
             }
         }

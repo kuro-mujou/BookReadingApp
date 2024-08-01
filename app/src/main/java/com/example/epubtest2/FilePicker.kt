@@ -59,7 +59,11 @@ fun FilePickerScreen(
 
         cacheFilePath?.let {
             Text(text = "File saved to cache: $it")
-            navController.navigate(Screens.BookListScreen.route + "/${Uri.encode(it)}")
+            Button(onClick = {
+                navController.navigate(Screens.BookListScreen.route + "/${Uri.encode(it)}")
+            }) {
+                Text(text = "View book details")
+            }
         }
     }
 }

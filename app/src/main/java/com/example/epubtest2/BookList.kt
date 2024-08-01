@@ -2,6 +2,7 @@ package com.example.epubtest2
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -22,9 +23,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import nl.siegmann.epublib.epub.EpubReader
 import java.io.File
 import java.io.FileInputStream
-import nl.siegmann.epublib.epub.EpubReader
 
 @Composable
 fun BookList(
@@ -65,7 +66,7 @@ fun BookList(
 
         Button(
             onClick = {
-
+                navController.navigate(Screens.BookContentScreen.route + "/${Uri.encode(filePath)}")
             }
         ) {
             Text(

@@ -8,5 +8,6 @@ sealed class Screens (val route : String){
     data object BookScreen : Screens(route = "bookScreen")
     data object FilePickerScreen : Screens(route = "filePicker")
     data object BookListScreen : Screens(route = "filePickerResult")
-
+    data object WebviewScreen : Screens(route = "webView")
+    data object BookContentScreen : Screens(route = "bookContent")
 }
